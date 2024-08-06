@@ -406,7 +406,7 @@ pipeline = {
     "read_and_process_L2": {
         "intake": "sondes",
         "apply": iterate_Sonde_method_over_dict_of_Sondes_objects,
-        "functions": [],
+        "functions": ["get_l2_filename", "read_l2"],
         "output": "sondes",
         "comment": "This step reads from the saved L2 files and prepares individual sonde datasets before they can be concatenated to create L3.",
     },
