@@ -949,6 +949,25 @@ class Sonde:
 
         return self
 
+    def prepare_l2_for_gridded(self):
+        """
+        Prepares l2 datasets to be concatenated to gridded.
+        I.e adds launch_time as dimension
+        adds all attributes as variables to avoid conflicts when concatenating because attributes are different
+        (and not lose information)
+
+        """
+        l2_ds = self.l2_ds.assign_coords(
+            {"launch_time": ("launch_time", [self.launch_time])}
+        ).sortby("time")
+
+        for attr, value in self.l2_ds.attrs.items():
+            l2_ds[attr] = value
+
+        l2_ds.attrs.clear()
+        object.__setattr__(self, "l2_ds", l2_ds)
+        return self
+
     def add_q_and_theta_to_l2_ds(self):
         """
         Adds potential temperature and specific humidity to the L2 dataset.
@@ -967,9 +986,32 @@ class Sonde:
         else:
             ds = self.l2_ds
 
-        ds = calc_q_from_rh(ds)
-        ds = calc_theta_from_T(ds)
+        ds = hh.calc_q_from_rh(ds)
+        ds = hh.calc_theta_from_T(ds)
 
         object.__setattr__(self, "_interim_l3_ds", ds)
 
+        return self
+
+
+@dataclass(order=True, frozen=True)
+class Gridded:
+    sondes: dict
+    # platforms: dict = field(default_factory=dict)
+    _: KW_ONLY
+    interpolation_grid: np.ndarray = field(
+        default_factory=lambda: np.arange(0, 10010, 10)
+    )
+    interpolation_bins: np.ndarray = field(
+        default_factory=lambda: np.arange(-5, 10015, 10).astype("int")
+    )
+    max_gap_fill: int = 50
+
+    def concat_sondes(self):
+        """
+        function to concatenate all sondes using the combination of all measurement times and launch times
+        """
+        list_of_l2_ds = [sonde.l2_ds for sonde in self.sondes.values()]
+        combined = xr.combine_by_coords(list_of_l2_ds)
+        object.__setattr__(self, "_interim_l3_ds", combined)
         return self
