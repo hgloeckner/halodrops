@@ -109,6 +109,7 @@ class Flight:
             self.l1dir = os.path.join(
                 data_directory, platform_directory_name, "Level_1", flight_id)
             self.flight_id = flight_id
+            self.flight_idpath = None
             self.platform_id = platform_id
             
             self.logger.info(
