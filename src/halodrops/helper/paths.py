@@ -82,6 +82,7 @@ class Flight:
         """
         
         self.path_structure = path_structure
+        self.data_directory = data_directory
         
         if self.path_structure == "flightid_first":
             self.logger = logging.getLogger("halodrops.helper.paths.Paths")
@@ -135,7 +136,9 @@ class Flight:
         `str`
             Path to quicklooks directory
         """
-        quicklooks_path_str = os.path.join(self.flight_idpath, "Quicklooks")
+        if self.path_structure == "levels_first":
+            quicklooks_path_str = os.path.join(self.data_directory, self.platform_id, "Quicklooks")
+            
         if pp(quicklooks_path_str).exists():
             self.logger.info(f"Path exists: {quicklooks_path_str=}")
         else:
