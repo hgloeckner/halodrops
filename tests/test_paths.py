@@ -3,12 +3,13 @@ import os
 
 main_data_directory = "../sample"
 platform = "HALO"
-flightdate = "20200101"
+flightdate = "20200201"
 path_structure = "levels_first"
 
 if path_structure == "levels_first":
     l1_path = os.path.join(main_data_directory, platform, "Level_1", flightdate)
-    quicklooks_path = os.path.join(main_data_directory, platform, "Quicklooks")
+    quicklooks_path = os.path.join(main_data_directory, platform, "Quicklooks", flightdate)
+    print(quicklooks_path)
 
 if path_structure == "flightid_first":
     l1_path = os.path.join(main_data_directory, platform, flightdate, "Level_1")
@@ -16,6 +17,8 @@ if path_structure == "flightid_first":
 
     
 object = paths.Flight(main_data_directory, flightdate, platform)
+
+print(object.quicklooks_path())
 
 
 def test_l1_path():

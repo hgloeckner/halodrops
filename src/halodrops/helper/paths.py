@@ -137,7 +137,7 @@ class Flight:
             Path to quicklooks directory
         """
         if self.path_structure == "levels_first":
-            quicklooks_path_str = os.path.join(self.data_directory, self.platform_id, "Quicklooks")
+            quicklooks_path_str = os.path.join(self.data_directory, self.platform_id, "Quicklooks", self.flight_id)
             
         if pp(quicklooks_path_str).exists():
             self.logger.info(f"Path exists: {quicklooks_path_str=}")
