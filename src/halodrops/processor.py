@@ -44,21 +44,19 @@ class Sonde:
         object.__setattr__(self, "qc", type("", (), {})())
         if self.launch_time is not None:
             object.__setattr__(self, "sort_index", self.launch_time)
-        
-        
+
     def add_path_structure(self, path_structure="levels_first"):
-        
-        """ Sets attribute of file structure
+
+        """Sets attribute of file structure
         Parameters:
         ----------
         path_structure : str, optional
-            The structure of the paths to store data. Default is to have "/pathtodata/Level_#/flight_id". 
+            The structure of the paths to store data. Default is to have "/pathtodata/Level_#/flight_id".
             But to be backwards compatible it is possible to use the old structure of "/pathtodata/flight_id/Level_#"
             if the user specifies path_structure="flightid_first".
         """
         object.__setattr__(self, "path_structure", path_structure)
         return self
-
 
     def add_flight_id(self, flight_id: str) -> None:
         """Sets attribute of flight ID
@@ -174,7 +172,6 @@ class Sonde:
         object.__setattr__(self, "postaspenfile", path_to_postaspenfile)
         return self
 
-
     def add_aspen_ds(self) -> None:
         """Sets attribute with an xarray Dataset read from post-ASPEN file
 
@@ -183,7 +180,7 @@ class Sonde:
 
         If the `postaspenfile` attribute doesn't exist, function will print out an error
         """
-        
+
         if hasattr(self, "postaspenfile"):
             ds = xr.open_dataset(self.postaspenfile)
             if "SondeId" not in ds.attrs:
@@ -919,7 +916,7 @@ class Sonde:
         ----------
         l2_dir : str, optional
             The directory to write the L2 file to. The default is the directory of the A-file with '0' replaced by '2'.
-    
+
         Returns
         -------
         self : object
@@ -927,7 +924,7 @@ class Sonde:
         """
 
         if l2_dir is None:
-            
+
             if self.path_structure == "levels_first":
                 l2_dir = os.path.dirname(self.afile).replace("Level_0", "Level_2")
             elif self.path_structure == "flightid_first":

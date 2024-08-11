@@ -54,7 +54,12 @@ class Flight:
     """
 
     def __init__(
-        self, data_directory, flight_id, platform_id, platform_directory_name=None, path_structure="levels_first",
+        self,
+        data_directory,
+        flight_id,
+        platform_id,
+        platform_directory_name=None,
+        path_structure="levels_first",
     ):
         """Creates an instance of Paths object for a given flight
 
@@ -80,10 +85,10 @@ class Flight:
         `l1dir`
             Path to Level-1 data directory
         """
-        
+
         self.path_structure = path_structure
         self.data_directory = data_directory
-        
+
         if self.path_structure == "flightid_first":
             self.logger = logging.getLogger("halodrops.helper.paths.Paths")
             if platform_directory_name is None:
@@ -95,28 +100,29 @@ class Flight:
             self.platform_id = platform_id
             self.l1dir = os.path.join(self.flight_idpath, "Level_1")
             self.l0dir = os.path.join(self.flight_idpath, "Level_0")
-    
+
             self.logger.info(
                 f"Created Path Instance: {self.flight_idpath=}; {self.flight_id=}; {self.l1dir=}"
             )
-            
+
         elif self.path_structure == "levels_first":
-        
+
             self.logger = logging.getLogger("halodrops.helper.paths.Paths")
             if platform_directory_name is None:
                 platform_directory_name = platform_id
             self.l0dir = os.path.join(
-                data_directory, platform_directory_name, "Level_0", flight_id)
+                data_directory, platform_directory_name, "Level_0", flight_id
+            )
             self.l1dir = os.path.join(
-                data_directory, platform_directory_name, "Level_1", flight_id)
+                data_directory, platform_directory_name, "Level_1", flight_id
+            )
             self.flight_id = flight_id
             self.flight_idpath = None
             self.platform_id = platform_id
-            
+
             self.logger.info(
                 f"Created Path Instance; {self.flight_id=}; {self.l0dir=}; {self.l1dir=}"
             )
-
 
     def get_all_afiles(self):
         """Returns a list of paths to all A-files for the given directory
@@ -137,8 +143,10 @@ class Flight:
             Path to quicklooks directory
         """
         if self.path_structure == "levels_first":
-            quicklooks_path_str = os.path.join(self.data_directory, self.platform_id, "Quicklooks", self.flight_id)
-            
+            quicklooks_path_str = os.path.join(
+                self.data_directory, self.platform_id, "Quicklooks", self.flight_id
+            )
+
         if pp(quicklooks_path_str).exists():
             self.logger.info(f"Path exists: {quicklooks_path_str=}")
         else:
