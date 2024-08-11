@@ -87,12 +87,26 @@ def test_sonde_add_afile(temp_afile_launchdetected, temp_afile_nolaunchdetected)
     assert sonde.afile == temp_afile_nolaunchdetected
 
 
-def test_sonde_run_aspen_with_only_afile(temp_afile_launchdetected, temp_postaspenfile):
+def test_sonde_add_postaspenfile_without_launch(temp_afile_nolaunchdetected):
+    """
+    Test the addition of a post-ASPEN file when a launch has not been detected.
+    """
+    sonde = Sonde(serial_id=s_id)
+    sonde.add_afile(temp_afile_nolaunchdetected)
+    sonde.add_path_structure()
+    with pytest.raises(ValueError):
+        sonde.add_postaspenfile()
+
+
+def test_sonde_add_postaspenfile_with_only_afile(
+    temp_afile_launchdetected, temp_postaspenfile
+):
     """
     Test the addition of a post-ASPEN file when an A-file has been added.
     """
     sonde = Sonde(serial_id=s_id)
     sonde.add_afile(temp_afile_launchdetected)
+    sonde.add_path_structure()
     sonde.run_aspen()
     assert sonde.postaspenfile == temp_postaspenfile
 
