@@ -46,7 +46,6 @@ class Sonde:
             object.__setattr__(self, "sort_index", self.launch_time)
 
     def add_path_structure(self, path_structure="levels_first"):
-
         """Sets attribute of file structure
         Parameters:
         ----------
@@ -120,6 +119,15 @@ class Sonde:
         object.__setattr__(self, "afile", path_to_afile)
         return self
 
+    def add_level_dir(self):
+        if not hasattr(self, "afile"):
+            raise ValueError("No afile in sonde. Cannot continue")
+        l0dir = os.path.dirname(self.afile)
+        l1dir = l0dir.replace("Level_0", "Level_1")
+
+        object.__setattr__(self, "l0dir", l0dir)
+        object.__setattr__(self, "l1dir", l1dir)
+
     def run_aspen(self, path_to_postaspenfile: str = None) -> None:
         """Runs aspen and sets attribute with path to post-ASPEN file of the sonde
 
@@ -145,9 +153,12 @@ class Sonde:
         l0dir = os.path.dirname(self.afile)
         aname = os.path.basename(self.afile)
         dname = "D" + aname[1:]
-        l1dir = l0dir[:-1] + "1"
+        l1dir = l0dir.replace("Level_0", "Level_1")
+        l1name = dname.split(".")[0] + "QC.nc"
+
         if path_to_postaspenfile is None:
             path_to_postaspenfile = os.path.join(l1dir, l1name)
+            print(path_to_postaspenfile)
 
         if not os.path.exists(path_to_postaspenfile):
             os.makedirs(l1dir, exist_ok=True)

@@ -4,6 +4,8 @@ import xarray as xr
 from halodrops.processor import Sonde
 
 s_id = "test_this_id"
+flight_id = "test_this_flight"
+platform_id = "test_this_platform"
 launch_time = "2020-02-02 20:22:02"
 file_name_nolaunch = "test_file_nolaunch"
 file_name_launch = "test_file_launch"
@@ -27,7 +29,9 @@ def tmp_data_directory(tmp_path):
     """
     data_directory = tmp_path / "data"
     data_directory.mkdir()
-    return str(data_directory)
+    platform_dir = os.path.join(str(data_directory), platform_id)
+    os.mkdir(platform_dir)
+    return platform_dir
 
 
 @pytest.fixture
@@ -35,8 +39,9 @@ def temp_afile_dir(tmp_data_directory):
     """
     Create a temporary A-file directory for testing.
     """
-    afile_dir = os.path.join(tmp_data_directory, "Level_0")
-    os.mkdir(afile_dir)
+
+    afile_dir = os.path.join(tmp_data_directory, "Level_0", flight_id)
+    os.makedirs(afile_dir)
     return str(afile_dir)
 
 
@@ -67,7 +72,9 @@ def temp_postaspenfile(tmp_data_directory):
     """
     Create a temporary post-ASPEN file for testing.
     """
-    postaspenfile_dir = os.path.join(tmp_data_directory, "Level_1")
+    lev1_dir = os.path.join(tmp_data_directory, "Level_1")
+    os.mkdir(lev1_dir)
+    postaspenfile_dir = os.path.join(lev1_dir, flight_id)
     os.mkdir(postaspenfile_dir)
     postaspenfile = os.path.join(postaspenfile_dir, postaspenfile_name)
     ds = xr.Dataset(dict(foo=("bar", [4, 2])))
@@ -76,26 +83,31 @@ def temp_postaspenfile(tmp_data_directory):
     return str(postaspenfile)
 
 
-def test_sonde_add_afile(temp_afile_launchdetected, temp_afile_nolaunchdetected):
+@pytest.fixture
+def sonde():
+    sonde = Sonde(serial_id=s_id)
+    sonde.add_flight_id(flight_id)
+    assert sonde.flight_id == flight_id
+    sonde.add_platform_id(platform_id)
+    assert sonde.platform_id == platform_id
+    sonde.add_path_structure()
+    assert sonde.path_structure == "levels_first"
+    return sonde
+
+
+def test_sonde_add_afile(sonde, temp_afile_launchdetected, temp_afile_nolaunchdetected):
     """
     Test the addition of an A-file.
     """
-    sonde = Sonde(serial_id=s_id)
     sonde.add_afile(temp_afile_launchdetected)
     assert sonde.afile == temp_afile_launchdetected
     sonde.add_afile(temp_afile_nolaunchdetected)
     assert sonde.afile == temp_afile_nolaunchdetected
 
 
-def test_sonde_add_postaspenfile_without_launch(temp_afile_nolaunchdetected):
-    """
-    Test the addition of a post-ASPEN file when a launch has not been detected.
-    """
-    sonde = Sonde(serial_id=s_id)
-    sonde.add_afile(temp_afile_nolaunchdetected)
-    sonde.add_path_structure()
-    with pytest.raises(ValueError):
-        sonde.add_postaspenfile()
+def test_sonde_level_dir(sonde, temp_afile_launchdetected):
+    sonde.add_afile(temp_afile_launchdetected)
+    sonde.add_level_dir()
 
 
 def test_sonde_add_postaspenfile_with_only_afile(
@@ -106,16 +118,15 @@ def test_sonde_add_postaspenfile_with_only_afile(
     """
     sonde = Sonde(serial_id=s_id)
     sonde.add_afile(temp_afile_launchdetected)
-    sonde.add_path_structure()
     sonde.run_aspen()
     assert sonde.postaspenfile == temp_postaspenfile
 
 
-def test_sonde_add_aspen_ds(temp_afile_launchdetected, temp_postaspenfile):
+def test_sonde_add_aspen_ds(sonde, temp_afile_launchdetected, temp_postaspenfile):
     """
     Test the addition of an ASPEN dataset.
     """
-    sonde = Sonde(serial_id=s_id)
+
     sonde.add_afile(temp_afile_launchdetected)
     sonde.run_aspen(temp_postaspenfile)
     sonde.add_aspen_ds()
