@@ -122,11 +122,15 @@ class Sonde:
     def add_level_dir(self):
         if not hasattr(self, "afile"):
             raise ValueError("No afile in sonde. Cannot continue")
-        l0dir = os.path.dirname(self.afile)
-        l1dir = l0dir.replace("Level_0", "Level_1")
+        l0_dir = os.path.dirname(self.afile)
+        l1_dir = l0_dir.replace("Level_0", "Level_1")
+        l2_dir = l0_dir.replace("Level_0", "Level_2")
+        l3_dir = l0_dir.replace("Level_0", "Level_3")
 
-        object.__setattr__(self, "l0dir", l0dir)
-        object.__setattr__(self, "l1dir", l1dir)
+        object.__setattr__(self, "l0_dir", l0_dir)
+        object.__setattr__(self, "l1_dir", l1_dir)
+        object.__setattr__(self, "l2_dir", l2_dir)
+        object.__setattr__(self, "l3_dir", l3_dir)
 
     def run_aspen(self, path_to_postaspenfile: str = None) -> None:
         """Runs aspen and sets attribute with path to post-ASPEN file of the sonde
@@ -150,32 +154,31 @@ class Sonde:
             The path to the post-ASPEN file. This attribute is set if the file exists at the constructed or provided path.
         """
 
-        l0dir = os.path.dirname(self.afile)
+        l0_dir = self.l0_dir  # os.path.dirname(self.afile)
         aname = os.path.basename(self.afile)
         dname = "D" + aname[1:]
-        l1dir = l0dir.replace("Level_0", "Level_1")
-        l1name = dname.split(".")[0] + "QC.nc"
+        l1_dir = self.l1_dir
+        l1_name = dname.split(".")[0] + "QC.nc"
 
         if path_to_postaspenfile is None:
-            path_to_postaspenfile = os.path.join(l1dir, l1name)
-            print(path_to_postaspenfile)
+            path_to_postaspenfile = os.path.join(l1_dir, l1_name)
 
         if not os.path.exists(path_to_postaspenfile):
-            os.makedirs(l1dir, exist_ok=True)
+            os.makedirs(l1_dir, exist_ok=True)
             subprocess.run(
                 [
                     "docker",
                     "run",
                     "--rm",
                     "--mount",
-                    f"type=bind,source={l0dir},target=/input",
+                    f"type=bind,source={l0_dir},target=/input",
                     "--mount",
-                    f"type=bind,source={l1dir},target=/output",
+                    f"type=bind,source={l1_dir},target=/output",
                     "ghcr.io/atmdrops/aspenqc:4.0.2",
                     "-i",
                     f"/input/{dname}",
                     "-n",
-                    f"/output/{l1name}",
+                    f"/output/{l1_name}",
                 ],
                 check=True,
             )

@@ -159,9 +159,7 @@ class Flight:
             Sondes[sonde_id].add_path_structure(self.path_structure)
             Sondes[sonde_id].add_platform_id(self.platform_id)
             Sondes[sonde_id].add_afile(a_file)
-            if launch_detect:
-                Sondes[sonde_id].add_postaspenfile()
-                Sondes[sonde_id].add_aspen_ds()
+            Sondes[sonde_id].add_level_dir()
 
         object.__setattr__(self, "Sondes", Sondes)
 

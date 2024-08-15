@@ -118,6 +118,7 @@ def test_sonde_add_postaspenfile_with_only_afile(
     """
     sonde = Sonde(serial_id=s_id)
     sonde.add_afile(temp_afile_launchdetected)
+    sonde.add_level_dir()
     sonde.run_aspen()
     assert sonde.postaspenfile == temp_postaspenfile
 
@@ -128,6 +129,7 @@ def test_sonde_add_aspen_ds(sonde, temp_afile_launchdetected, temp_postaspenfile
     """
 
     sonde.add_afile(temp_afile_launchdetected)
+    sonde.add_level_dir()
     sonde.run_aspen(temp_postaspenfile)
     sonde.add_aspen_ds()
     assert isinstance(sonde.aspen_ds, xr.Dataset)
@@ -142,6 +144,7 @@ def test_sonde_add_aspen_ds_with_mismatched_sonde_id(
     """
     sonde = Sonde(serial_id=s_id[:-1])
     sonde.add_afile(temp_afile_launchdetected)
+    sonde.add_level_dir()
     sonde.run_aspen(temp_postaspenfile)
     with pytest.raises(ValueError):
         sonde.add_aspen_ds()
