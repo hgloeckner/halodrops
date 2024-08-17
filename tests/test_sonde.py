@@ -90,8 +90,6 @@ def sonde():
     assert sonde.flight_id == flight_id
     sonde.add_platform_id(platform_id)
     assert sonde.platform_id == platform_id
-    sonde.add_path_structure()
-    assert sonde.path_structure == "levels_first"
     return sonde
 
 

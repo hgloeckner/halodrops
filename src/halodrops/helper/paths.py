@@ -156,7 +156,6 @@ class Flight:
             Sondes[sonde_id] = Sonde(sonde_id, launch_time=launch_time)
             Sondes[sonde_id].add_launch_detect(launch_detect)
             Sondes[sonde_id].add_flight_id(self.flight_id)
-            Sondes[sonde_id].add_path_structure(self.path_structure)
             Sondes[sonde_id].add_platform_id(self.platform_id)
             Sondes[sonde_id].add_afile(a_file)
             Sondes[sonde_id].add_level_dir()

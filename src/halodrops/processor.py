@@ -45,18 +45,6 @@ class Sonde:
         if self.launch_time is not None:
             object.__setattr__(self, "sort_index", self.launch_time)
 
-    def add_path_structure(self, path_structure="levels_first"):
-        """Sets attribute of file structure
-        Parameters:
-        ----------
-        path_structure : str, optional
-            The structure of the paths to store data. Default is to have "/pathtodata/Level_#/flight_id".
-            But to be backwards compatible it is possible to use the old structure of "/pathtodata/flight_id/Level_#"
-            if the user specifies path_structure="flightid_first".
-        """
-        object.__setattr__(self, "path_structure", path_structure)
-        return self
-
     def add_flight_id(self, flight_id: str) -> None:
         """Sets attribute of flight ID
 
