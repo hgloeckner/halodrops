@@ -94,9 +94,6 @@ variable_compression_properties = dict(
 )
 
 
-path_to_flight_ids = "{platform}/Level_0"
-path_to_l0_files = "{platform}/Level_0/{flight_id}"
-
 l2_flight_attributes_map = {
     "True Air Speed (m/s)": "true_air_speed_(ms-1)",
     "Ground Speed (m/s)": "ground_speed_(ms-1)",
@@ -110,6 +107,9 @@ l2_flight_attributes_map = {
     "Geopotential Altitude (m)": "aircraft_geopotential_altitude_(m)",
 }
 
+
+path_to_flight_ids = "{platform}/Level_0"
+path_to_l0_files = "{platform}/Level_0/{flight_id}"
 
 l2_filename_template = "{platform}_{launch_time}_{flight_id}_{serial_id}_Level_2.nc"
 
