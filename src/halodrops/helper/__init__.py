@@ -219,16 +219,25 @@ def calc_q_from_rh(ds):
 
     Function to estimate specific humidity from the relative humidity, temperature and pressure in the given dataset.
     """
-    e_s = calc_saturation_pressure(ds.ta.values)
-    w_s = mpcalc.mixing_ratio(e_s * units.Pa, ds.p.values * units.Pa).magnitude
-    w = ds.rh.values * w_s
-    q = w / (1 + w)
-    ds["q"] = (ds.rh.dims, q)
+
+    vmr = mpcalc.mixing_ratio_from_relative_humidity(
+        ds["p"].values * units.Pa,
+        ds.ta.values * units.kelvin,
+        (ds.rh * 100) * units.percent,
+    )
+    q = mpcalc.specific_humidity_from_mixing_ratio(vmr)
+
+    ds["q"] = (ds.rh.dims, q.magnitude)
+    ds["q"].attrs = dict(
+        standard_name="specific humidity",
+        long_name="specific humidity",
+        units=str(q.units),
+    )
 
     return ds
 
 
-def calc_theta_from_T(dataset):
+def calc_theta_from_T(ds):
     """
     Input :
 
@@ -241,8 +250,13 @@ def calc_theta_from_T(dataset):
     Function to estimate potential temperature from the temperature and pressure in the given dataset.
     """
     theta = mpcalc.potential_temperature(
-        dataset.p.values * units.Pa, dataset.ta.values * units.kelvin
-    ).magnitude
-    ds["theta"] = (ds.ta.dims, theta)
+        ds.p.values * units.Pa, ds.ta.values * units.kelvin
+    )
+    ds["theta"] = (ds.ta.dims, theta.magnitude)
+    ds["theta"].attrs = dict(
+        standard_name="potential temperature",
+        long_name="potential temperature",
+        units=str(theta.units),
+    )
 
     return ds
