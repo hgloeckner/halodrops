@@ -300,6 +300,20 @@ def sondes_to_gridded(sondes: dict, config: configparser.ConfigParser):
     return gridded
 
 
+def iterate_method_over_dataset(
+    obj: Gridded,
+    functions: list,
+    config: configparser.ConfigParser,
+) -> xr.Dataset:
+    """
+    This is NOT what the function should do in the end. only used to save the base-l3
+    """
+    for function_name in functions:
+        function = getattr(Gridded, function_name)
+        result = function(obj, **get_args_for_function(config, function))
+    return result
+
+
 def gridded_to_pattern(
     gridded: xr.Dataset, config: configparser.ConfigParser
 ) -> xr.Dataset:
@@ -458,6 +472,13 @@ pipeline = {
         "apply": sondes_to_gridded,
         "output": "gridded",
         "comment": "This step concatenates the individual sonde datasets to create the L3 dataset.",
+    },
+    "create_L3": {
+        "intake": "gridded",
+        "apply": iterate_method_over_dataset,
+        "functions": ["get_l3_dir", "get_l3_filename", "write_l3"],
+        "output": "gridded",
+        "comment": "This step creates the L3 dataset after adding additional products.",
     },
     # "create_patterns": {
     #     "intake": "gridded",
