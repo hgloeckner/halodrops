@@ -1099,3 +1099,19 @@ class Sonde:
         object.__setattr__(self, "_interim_l3_ds", ds)
 
         return self
+
+
+@dataclass(order=True)
+class Gridded:
+    sondes: dict
+    flight_id: str
+    platform_id: str
+
+    def concat_sondes(self):
+        """
+        function to concatenate all sondes using the combination of all measurement times and launch times
+        """
+        list_of_l2_ds = [sonde._prep_l3_ds for sonde in self.sondes.values()]
+        combined = xr.combine_by_coords(list_of_l2_ds)
+        self._interim_l3_ds = combined
+        return self
