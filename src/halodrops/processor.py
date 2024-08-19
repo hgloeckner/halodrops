@@ -1115,3 +1115,41 @@ class Gridded:
         combined = xr.combine_by_coords(list_of_l2_ds)
         self._interim_l3_ds = combined
         return self
+
+    def get_l3_dir(self, l3_dirname: str = None):
+        if l3_dirname:
+            self.l3_dir = l3_dirname
+        elif not self.sondes is None:
+            self.l3_dir = list(self.sondes.values())[0].l3_dir
+        else:
+            raise ValueError("No sondes and no l3 directory given, cannot continue ")
+
+    def get_l3_filename(
+        self, l3_filename_template: str = None, l3_filename: str = None
+    ):
+        if l3_filename is None:
+            if l3_filename_template is None:
+                l3_filename = hh.l3_filename_template.format(
+                    platform=self.platform_id,
+                    flight_id=self.flight_id,
+                )
+            else:
+                l3_filename = l3_filename_template.format(
+                    platform=self.platform_id,
+                    flight_id=self.flight_id,
+                )
+
+        self.l3_filename = l3_filename
+
+        return self
+
+    def write_l3(self, l3_dir: str = None):
+        if l3_dir is None:
+            l3_dir = self.l3_dir
+
+        if not os.path.exists(l3_dir):
+            os.makedirs(l3_dir)
+
+        self._interim_l3_ds.to_netcdf(os.path.join(l3_dir, self.l3_filename))
+
+        return self
