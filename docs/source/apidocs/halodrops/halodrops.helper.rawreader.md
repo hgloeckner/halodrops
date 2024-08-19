@@ -50,7 +50,7 @@
 ````{py:data} module_logger
 :canonical: halodrops.helper.rawreader.module_logger
 :value: >
-   None
+   'getLogger(...)'
 
 ```{autodoc2-docstring} halodrops.helper.rawreader.module_logger
 ```

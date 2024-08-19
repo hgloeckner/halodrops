@@ -22,10 +22,23 @@ halodrops.helper
 :titlesonly:
 :maxdepth: 1
 
-halodrops.sonde
+halodrops.processor
+halodrops.pipeline
 ```
 
 ## Package Contents
+
+### Functions
+
+````{list-table}
+:class: autosummary longtable
+:align: left
+
+* - {py:obj}`main <halodrops.main>`
+  - ```{autodoc2-docstring} halodrops.main
+    :summary:
+    ```
+````
 
 ### Data
 
@@ -64,7 +77,7 @@ halodrops.sonde
 ````{py:data} logger
 :canonical: halodrops.logger
 :value: >
-   None
+   'getLogger(...)'
 
 ```{autodoc2-docstring} halodrops.logger
 ```
@@ -74,7 +87,7 @@ halodrops.sonde
 ````{py:data} fh_info
 :canonical: halodrops.fh_info
 :value: >
-   None
+   'FileHandler(...)'
 
 ```{autodoc2-docstring} halodrops.fh_info
 ```
@@ -84,7 +97,7 @@ halodrops.sonde
 ````{py:data} fh_debug
 :canonical: halodrops.fh_debug
 :value: >
-   None
+   'FileHandler(...)'
 
 ```{autodoc2-docstring} halodrops.fh_debug
 ```
@@ -94,7 +107,7 @@ halodrops.sonde
 ````{py:data} ch
 :canonical: halodrops.ch
 :value: >
-   None
+   'StreamHandler(...)'
 
 ```{autodoc2-docstring} halodrops.ch
 ```
@@ -113,9 +126,16 @@ halodrops.sonde
 ````{py:data} formatter
 :canonical: halodrops.formatter
 :value: >
-   None
+   'Formatter(...)'
 
 ```{autodoc2-docstring} halodrops.formatter
 ```
 
+````
+
+````{py:function} main()
+:canonical: halodrops.main
+
+```{autodoc2-docstring} halodrops.main
+```
 ````
