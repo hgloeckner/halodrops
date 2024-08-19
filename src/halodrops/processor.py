@@ -979,6 +979,88 @@ class Sonde:
         object.__setattr__(self, "_prep_l3_ds", _prep_l3_ds)
         return self
 
+    def remove_non_mono_incr_alt(self):
+        """
+        This function removes the indices in the
+        geopotential height ('gpsalt')
+        """
+        _prep_l3_ds = self._prep_l3_ds.load()
+        gps_alt = _prep_l3_ds.gpsalt
+        curr_alt = gps_alt.isel(time=0)
+        for i in range(len(gps_alt)):
+            if gps_alt[i] > curr_alt:
+                gps_alt[i] = np.nan
+            elif ~np.isnan(gps_alt[i]):
+                curr_alt = gps_alt[i]
+        _prep_l3_ds["gpsalt"] = gps_alt
+
+        mask = ~np.isnan(gps_alt)
+        object.__setattr__(
+            self,
+            "_prep_l3_ds",
+            _prep_l3_ds.sel(time=mask),
+        )
+        return self
+
+    def interpolate_alt(
+        self,
+        interp_start=-5,
+        interp_stop=14515,
+        interp_step=10,
+        max_gap_fill: int = 50,
+        method: str = "bin",
+    ):
+
+        interpolation_grid = np.arange(interp_start, interp_stop, interp_step)
+
+        if not (self._prep_l3_ds["gpsalt"].diff(dim="time") < 0).any():
+            warnings.warn(
+                f"your altitude for sonde {self._interim_l3_ds.sonde_id.values} is not sorted."
+            )
+        ds = self._prep_l3_ds.swap_dims({"time": "gpsalt"}).load()
+
+        if method == "linear_interpolate":
+            interp_ds = ds.interp(gpsalt=interpolation_grid)
+        elif method == "bin":
+
+            interpolation_bins = interpolation_grid.astype("int")
+            interpolation_label = np.arange(
+                interp_start + interp_step / 2,
+                interp_stop - interp_step / 2,
+                interp_step,
+            )
+            interp_ds = ds.groupby_bins(
+                "gpsalt",
+                interpolation_bins,
+                labels=interpolation_label,
+            ).mean(dim="gpsalt")
+            # somehow coordinates are lost and need to be added again
+            for coord in ["lat", "lon", "time"]:
+                interp_ds = interp_ds.assign_coords(
+                    {
+                        coord: (
+                            "gpsalt",
+                            ds[coord]
+                            .groupby_bins(
+                                "gpsalt", interpolation_bins, labels=interpolation_label
+                            )
+                            .mean("gpsalt")
+                            .values,
+                        )
+                    }
+                )
+            interp_ds = (
+                interp_ds.transpose()
+                .interpolate_na(
+                    dim="gpsalt_bins", max_gap=max_gap_fill, use_coordinate=True
+                )
+                .rename({"gpsalt_bins": "gpsalt", "time": "interpolated_time"})
+            )
+
+        object.__setattr__(self, "_prep_l3_ds", interp_ds)
+
+        return self
+
     def add_q_and_theta_to_l2_ds(self):
         """
         Adds potential temperature and specific humidity to the L2 dataset.
