@@ -284,8 +284,11 @@ def iterate_Sonde_method_over_dict_of_Sondes_objects(
     return my_dict
 
 
-def sondes_to_gridded(sondes: dict) -> xr.Dataset:
-    pass
+def rm_no_launch(sondes: dict, config: configparser.ConfigParser):
+    for key in list(sondes.keys()):
+        if not sondes[key].launch_detect:
+            sondes.pop(key)
+    return sondes
 
 
 def iterate_method_over_dataset(dataset: xr.Dataset, functions: list) -> xr.Dataset:
@@ -424,26 +427,27 @@ pipeline = {
         "output": "sondes",
         "comment": "This steps creates the L2 files after the QC (user says how QC flags are used to go from L1 to L2) and then saves these as L2 NC datasets.",
     },
-    # "read_and_process_L2": {
-    #     "intake": "sondes",
-    #     "apply": iterate_Sonde_method_over_dict_of_Sondes_objects,
-    #     "functions": [],
-    #     "output": "sondes",
-    #     "comment": "This step reads from the saved L2 files and prepares individual sonde datasets before they can be concatenated to create L3.",
-    # },
-    # "concatenate_L2": {
-    #     "intake": "sondes",
-    #     "apply": sondes_to_gridded,
-    #     "output": "gridded",
-    #     "comment": "This step concatenates the individual sonde datasets to create the L3 dataset and saves it as an NC file.",
-    # },
-    # "create_L3": {
-    #     "intake": "gridded",
-    #     "apply": iterate_method_over_dataset,
-    #     "functions": [],
-    #     "output": "gridded",
-    #     "comment": "This step creates the L3 dataset after adding additional products.",
-    # },
+    "remove_no_launch": {
+        "intake": "sondes",
+        "apply": rm_no_launch,
+        "output": "sondes"
+        "comment: this step removes the sondes without a launch detect to continue processing",
+    },
+    "process_L2": {
+        "intake": "sondes",
+        "apply": iterate_Sonde_method_over_dict_of_Sondes_objects,
+        "functions": [
+            "get_l2_filename",
+            "add_l2_ds",
+            "create_prep_l3",
+            "add_q_and_theta_to_l2_ds",
+            "remove_non_mono_incr_alt",
+            "interpolate_alt",
+            "prepare_l2_for_gridded",
+        ],
+        "output": "sondes",
+        "comment": "This step reads from the saved L2 files and prepares individual sonde datasets before they can be concatenated to create L3.",
+    },
     # "create_patterns": {
     #     "intake": "gridded",
     #     "apply": gridded_to_pattern,

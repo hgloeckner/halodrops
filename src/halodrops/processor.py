@@ -4,9 +4,11 @@ from datetime import datetime
 from typing import Any, Optional, List
 import os
 import subprocess
+import warnings
 
 import numpy as np
 import xarray as xr
+
 
 from halodrops.helper import rawreader as rr
 import halodrops.helper as hh
@@ -1061,6 +1063,21 @@ class Sonde:
 
         return self
 
+    def prepare_l2_for_gridded(self):
+        """
+        Prepares l2 datasets to be concatenated to gridded.
+        adds all attributes as variables to avoid conflicts when concatenating because attributes are different
+        (and not lose information)
+
+        """
+        _prep_l3_ds = self._prep_l3_ds
+        for attr, value in self._prep_l3_ds.attrs.items():
+            _prep_l3_ds[attr] = value
+
+        _prep_l3_ds.attrs.clear()
+        object.__setattr__(self, "_prep_l3_ds", _prep_l3_ds)
+        return self
+
     def add_q_and_theta_to_l2_ds(self):
         """
         Adds potential temperature and specific humidity to the L2 dataset.
@@ -1074,13 +1091,10 @@ class Sonde:
         self : object
             Returns the sonde object with potential temperature and specific humidity added to the L2 dataset.
         """
-        if hasattr(self, "_interim_l3_ds"):
-            ds = self._interim_l3_ds
-        else:
-            ds = self.l2_ds
+        ds = self._prep_l3_ds
 
-        ds = calc_q_from_rh(ds)
-        ds = calc_theta_from_T(ds)
+        ds = hh.calc_q_from_rh(ds)
+        ds = hh.calc_theta_from_T(ds)
 
         object.__setattr__(self, "_interim_l3_ds", ds)
 
