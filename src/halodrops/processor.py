@@ -972,6 +972,13 @@ class Sonde:
 
         return self
 
+    def create_prep_l3(self):
+        _prep_l3_ds = self.l2_ds.assign_coords(
+            {"sonde_id": ("sonde_id", [self.l2_ds.sonde_id.values])}
+        ).sortby("time")
+        object.__setattr__(self, "_prep_l3_ds", _prep_l3_ds)
+        return self
+
     def add_q_and_theta_to_l2_ds(self):
         """
         Adds potential temperature and specific humidity to the L2 dataset.
