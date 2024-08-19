@@ -5,8 +5,8 @@ from typing import Dict
 import os.path
 
 from halodrops.helper import rawreader as rr
-from halodrops.processor import Sonde
 from halodrops.helper import platform_path_template, flight_path_template
+from halodrops.processor import Sonde
 
 # create logger
 module_logger = logging.getLogger("halodrops.helper.paths")
