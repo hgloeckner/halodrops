@@ -36,6 +36,7 @@ autodoc2_packages = [
     },
 ]
 autodoc2_render_plugin = "myst"
+autosectionlabel_prefix_document = True
 exclude_patterns = []
 
 source_suffix = {
@@ -48,7 +49,7 @@ source_suffix = {
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "sphinx_book_theme"
-html_static_path = ["_static"]
+# html_static_path = ["_static"]
 html_context = {"default_mode": "light"}
 html_theme_options = {
     "repository_url": "https://github.com/Geet-George/halodrops",

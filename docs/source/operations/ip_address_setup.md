@@ -9,7 +9,7 @@ The section below is *"a rough description from the back of* [Tobi's] *head. The
 The HALO user network uses the same IP-Range as the AVAPS-Internal Radio and Dropsonde interfaces (`192.168.1.0/24`). The AVAPS-Internal addresses are hard-coded in their firmware and almost impossible to change. The HALO user network is used by many and changing it would potentially influence a lot of complicated systems (although it might be reasonable to change the HALO user network to a bigger address space to avoid conflicts in future). A computer (specifically, the AVAPS Computer) uses IP-Addresses to talk to other devices on a network. The computer must know over which network card a packet should be sent, based on the target IP address. This requires to have distinct IP ranges (subnets) on each network card, which is (at first sight) incompatible with having two separate networks on the same IP range.
 
 
-| ![AVAPS Network Conceptual Sketch](../../graphics/AVAPS_network_conceptual_sketch.png) |
+| ![AVAPS Network Conceptual Sketch](../graphics/AVAPS_network_conceptual_sketch.png) |
 | :------------------------------------------------------------------------------------: |
 |              *AVAPS Network Conceptual Sketch (courtesy: Tobias Kölling)*              |
 

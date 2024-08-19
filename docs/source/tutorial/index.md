@@ -2,17 +2,16 @@
 
 ```{toctree}
 :caption: 'Contents:'
-:maxdepth: 1
+
 
 installation
+configs
 ```
+
+
 -----
-Ideally, for a campaign, the package would run in a way that all you have to do for data processing is:
+To run halodrops on a folder of dropsonde data, use
 
-```console
-halodrops data <campaign_id> <path/to/raw/data>
+```bash
+halodrops -c <config_file>
 ```
-(t_extensions)=
-## Extensions
-
-The data processing can be specified to handle data only for particular files, flights or other sets.

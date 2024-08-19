@@ -1,6 +1,5 @@
-# Performance of sondes
 
-----
+# Performance of sondes
 
 The performance of sondes is determined by how well the sonde performs with data provision. Taking into account the "fullness" of data provided by the sonde and the data's "quality", the sondes can be categorized as either `GOOD`, `BAD` or `UGLY`. A more detailed explanation of these terms will show up here soon, as the package develops, but for now, the basis of such a classification of sondes is explained in the publication for the [JOANNE dataset](https://doi.org/10.5194/essd-13-5253-2021). The classification takes into account potential failures that a sonde might have and therefore, it is a good idea to learn about these failures.
 

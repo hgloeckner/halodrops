@@ -29,24 +29,3 @@ Next, it retrieves the default values for all functions within the halodrops pac
 The script then defines a list of functions to execute. For each function, it retrieves the non-default arguments from the previously retrieved non-default values. If the function has mandatory arguments, it retrieves their values from the configuration file using the `get_mandatory_values_from_config` function.
 
 Finally, the script executes each function with the retrieved arguments.
-
-### Usage
-To use this script, you need to provide a configuration file that contains the non-default and mandatory values for the functions you want to execute. The configuration file should should have a `MANDATORY` section and a separate for each function where non-default values are to be provided, where the section name is the fully qualified name of the function (e.g.`api.qc.run`). Each section should contain options for the function arguments, where the option names are the argument names and the option values are the argument values.
-
-An example config file would look like
-
-```ini
-[MANDATORY]
-data_directory = /path/to/data
-flight_id = 20220401
-
-[api.qc.run]
-arg1 = nondefault1
-arg2 = nondefault2
-```
-
-You can run the script from the command line simply by running `halodrops` or optionally with the `-c` or `--config_file_path` option followed by the path to your configuration file. For example:
-
-```bash
-halodrops -c /path/to/config/file
-```

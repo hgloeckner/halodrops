@@ -19,7 +19,7 @@ This package documents and enables a uniform workflow for the [HALO aircraft](ht
 
 Keeping these objectives in mind, HALO-DROPS has two elements at its core:
 
-1. {doc}`Handbook <handbook/index>`
+1. {doc}`Operations <operations/index>`
 
 The handbook serves as a document outlining the steps for dropsondes' routine operations, known issues and troubleshooting as well as for handling data such as the recommended data structure.
 
@@ -46,8 +46,9 @@ For a quick start to using `halodrops`, go to {doc}`Getting Started <tutorial/in
 
 CONTRIBUTING.md
 tutorial/index
-howto/index
 explanation/index
-handbook/index
+data/index
+operations/index
+howto/index
 apidocs/index
 ```
