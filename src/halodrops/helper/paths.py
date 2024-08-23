@@ -16,8 +16,8 @@ class Platform:
     """
     Deriving flight paths from the provided platform directory
 
-    The input should align in terms of hierarchy and nomenclature
-    with the {doc}`Directory Structure </handbook/directory_structure>` that `halodrops` expects.
+    The  structure of the input should be defined in the config file as described in the
+     {doc}`example config  </tutorial/configs>`.
     """
 
     def __init__(
@@ -53,10 +53,10 @@ class Platform:
 
 class Flight:
     """
-    Deriving paths from the provided directory
+    Deriving sonde paths from the provided directory
 
-    The input should align in terms of hierarchy and nomenclature
-    with the {doc}`Directory Structure </handbook/directory_structure>` that `halodrops` expects.
+    The  structure of the input should be defined in the config file as described in the
+     {doc}`example config  </tutorial/configs>`.
     """
 
     def __init__(
