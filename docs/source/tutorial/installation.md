@@ -7,18 +7,14 @@ You can either clone the repository by
 git clone git@github.com:Geet-George/halodrops.git
 ```
 
-and run
+and create a respective python environment with `conda` from the base folder directory:
 
 ```
 conda env create -f environment.yml
 ```
-or
-```
-mamba env create -f environment.yml
-```
-from the folder directory to install halodrops in development mode,
+This will install halodrops in development mode.
 
-or you can directly install the package from github using pip
+Alternatively, you can directly install the package from github using pip
 
 ```
 pip install git+https://github.com/Geet-George/halodrops.git#egg=halodrops
