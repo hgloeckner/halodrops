@@ -8,11 +8,11 @@ Usually dropsonde data has a `platform` from which it was meassured and a `fligh
 
 | Level     | Description                                                                                    |
 | --------- | ---------------------------------------------------------------------------------------------- |
-| `Level_0` | Contains all raw files from a flight                                                           |
-| `Level_1` | Files generated from the ASPEN-processing of the D-files in Level-0                            |
-| `Level_2` | Sounding files that passed additional QC tests, and exclude all soundings with no usable data  |
-| `Level_3` | All sounding files in Level-2 gridded on a uniform, vertical grid, with some derived variables |
-| `Level_4` | Circle products from all circles flown during flight                                           |
+| `Level_0` | raw files from the AVAPS software (A-files, D-files, ...). Some files contain auxiliary data for a measurement sequence (usually a flight) and others are per sonde. |
+| `Level_1` | ASPEN-processed netCDF files per sonde. First QC applied. |
+| `Level_2` | Sondes that passed additional QC tests. Still one file per sonde. All soundings with no usable data are excluded  |
+| `Level_3` | One dataset (file) containing all Level_2 soundings gridded on a uniform, vertical grid, with some derived variables |
+| `Level_4` | Circle products from all circles flown during flight or measurement campaign |
 
 
 You can define your exact folder structure as shown in {doc}`example configs <../tutorial/configs>`
