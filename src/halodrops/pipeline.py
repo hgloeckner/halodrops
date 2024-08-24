@@ -285,13 +285,6 @@ def iterate_Sonde_method_over_dict_of_Sondes_objects(
     return my_dict
 
 
-def rm_no_launch(sondes: dict, config: configparser.ConfigParser):
-    for key in list(sondes.keys()):
-        if not sondes[key].launch_detect:
-            sondes.pop(key)
-    return sondes
-
-
 def sondes_to_gridded(sondes: dict, config: configparser.ConfigParser):
     flight_id = list(sondes.values())[0].flight_id
     platform_id = list(sondes.values())[0].platform_id
@@ -445,12 +438,6 @@ pipeline = {
         ],
         "output": "sondes",
         "comment": "This steps creates the L2 files after the QC (user says how QC flags are used to go from L1 to L2) and then saves these as L2 NC datasets.",
-    },
-    "remove_no_launch": {
-        "intake": "sondes",
-        "apply": rm_no_launch,
-        "output": "sondes"
-        "comment: this step removes the sondes without a launch detect to continue processing",
     },
     "process_L2": {
         "intake": "sondes",

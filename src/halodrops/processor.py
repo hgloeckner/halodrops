@@ -967,12 +967,13 @@ class Sonde:
         """
         if l2_dir is None:
             l2_dir = self.l2_dir
-
-        object.__setattr__(
-            self, "l2_ds", xr.open_dataset(os.path.join(l2_dir, self.l2_filename))
-        )
-
-        return self
+        try:
+            object.__setattr__(
+                self, "l2_ds", xr.open_dataset(os.path.join(l2_dir, self.l2_filename))
+            )
+            return self
+        except FileNotFoundError:
+            return None
 
     def create_prep_l3(self):
         _prep_l3_ds = self.l2_ds.assign_coords(
